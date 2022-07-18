@@ -25,6 +25,14 @@ add_subdirectory(RArea)
 target_link_libraries(LidaPath PUBLIC RArea)
 target_include_directories(LidaPath PUBLIC RArea)
 
+add_subdirectory(Block)
+target_link_libraries(LidaPath PUBLIC Block)
+target_include_directories(LidaPath PUBLIC Block)
+
+add_subdirectory(Board)
+target_link_libraries(LidaPath PUBLIC Board)
+target_include_directories(LidaPath PUBLIC Board)
+
 add_custom_target(XPSTest
 	${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/XPSTest ${CMAKE_CURRENT_BINARY_DIR}/XPSTest 
 )
