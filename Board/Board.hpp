@@ -7,7 +7,8 @@
 
 class Board {
 public:
-	Board(std::vector<int> verticalBounds_, std::vector<int> gorizontalBounds_);
+	Board(std::vector<int> gorizontalBounds, std::vector<int> verticalBounds,
+		  const XPSHelper& xpsHelper);
 
 private:
 	const XPSHelper& xpsHelper_;

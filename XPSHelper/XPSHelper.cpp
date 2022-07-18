@@ -148,3 +148,21 @@ RArea XPSHelper::GetWellCoat(int num) const {
 std::pair<int, int> XPSHelper::GetOldCoords(int num) const {
 	return oldGeometry_[num];
 }
+
+int XPSHelper::GetXPSWidth() const {
+	int width = 0;
+
+	for (auto wellCoords : geometry_)
+		width = std::max(width, wellCoords.first);
+
+	return width + 1;
+}
+
+int XPSHelper::GetXPSHeight() const {
+	int height = 0;
+
+	for (auto wellCoords : geometry_)
+		height = std::max(height, wellCoords.second);
+
+	return height + 1; 
+}

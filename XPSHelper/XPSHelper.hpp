@@ -34,6 +34,9 @@ public:
 		return false;
 	}
 
+	int GetXPSWidth() const;
+	int GetXPSHeight() const;
+
 private:
 	std::vector<RArea> storage_;
 
