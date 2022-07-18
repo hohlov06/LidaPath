@@ -23,7 +23,7 @@ Block::Block(std::vector<int> wellNums,
 	for (auto wellNum : wellNums)
 		minY = std::min(minY, xpsHelper.GetWellCoords(wellNum).second);
 
-	blockGeometry_.resize(height, std::vector<int>(width));
+	blockGeometry_.resize(height, std::vector<int>(width, -1));
 	for (auto wellNum : wellNums) {
 		blockGeometry_[xpsHelper.GetWellCoords(wellNum).second - minY][xpsHelper.GetWellCoords(wellNum).first - minX] = wellNum;
 	}

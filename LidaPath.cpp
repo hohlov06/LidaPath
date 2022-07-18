@@ -67,5 +67,26 @@ int main(int argc, char* argv[]) {
 		std::cout << std::endl;
 	}
 
+	auto adjList = board.GetAdjList();
+
+	for (int i = 0; i < adjList.size(); ++i) {
+		std::cout << i << ": ";
+		for (int j = 0; j < adjList[i].size(); ++j)
+			std::cout << adjList[i][j] << " ";
+		std::cout << std::endl;
+	}
+
+	std::cout << std::endl;
+
+	auto paths = board.GetPaths();
+
+	std::cout << "Paths count: " << paths.size() << std::endl;
+
+	for (int i = 0; i < paths.size(); ++i) {
+		for (int j = 0; j < paths[i].size(); ++j)
+			std::cout << paths[i][j] << " ";
+		std::cout << std::endl;
+	}
+
 	return 0;
 }

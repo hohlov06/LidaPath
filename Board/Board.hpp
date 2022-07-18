@@ -2,6 +2,7 @@
 
 #include "../XPSHelper/XPSHelper.hpp"
 #include "../Block/Block.hpp"
+#include "../BlockGraph/BlockGraph.hpp"
 
 #include <vector>
 
@@ -11,6 +12,8 @@ public:
 		  const XPSHelper& xpsHelper);
 
 	const std::vector<Block>& GetBlocks() const;
+	const std::vector<std::vector<int>>& GetAdjList() const;
+	const std::vector<std::vector<int>>& GetPaths() const;
 
 private:
 	void CreateBlocks();
@@ -21,4 +24,7 @@ private:
 					 gorizontalBounds_;
 
 	std::vector<Block> blocks_;
+
+	std::vector<std::vector<int>> adjList_;
+	std::vector<std::vector<int>> paths_;
 };
