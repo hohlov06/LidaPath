@@ -53,5 +53,19 @@ int main(int argc, char* argv[]) {
 
 	Board board(gorizontalBounds, verticalBounds, xpsHelper);
 
+	auto blocks = board.GetBlocks();
+	for (int i = 0; i < blocks.size(); ++i) {
+		auto geom = blocks[i].GetGeometry();
+
+		for (int j = 0; j < geom.size(); ++j) {
+			for (int k = 0; k < geom[j].size(); ++k)
+				std::cout << geom[j][k] << " ";
+			std::cout << std::endl;
+		}
+
+		std::cout << std::endl;
+		std::cout << std::endl;
+	}
+
 	return 0;
 }
