@@ -1,8 +1,15 @@
 #include "Board.hpp"
 
+#include "../BlockGraph/BlockGraph.hpp"
+#include "../Snake/Snake.hpp"
+
+#include <fstream>
+#include <string>
+
 Board::Board(std::vector<int> gorizontalBounds, std::vector<int> verticalBounds,
-			 const XPSHelper& xpsHelper) :
-	xpsHelper_(xpsHelper)
+			 const XPSHelper& xpsHelper, const int K) :
+	xpsHelper_(xpsHelper),
+	K_(K)
 {
 	gorizontalBounds_ = gorizontalBounds;
 	verticalBounds_   = verticalBounds;
@@ -12,6 +19,25 @@ Board::Board(std::vector<int> gorizontalBounds, std::vector<int> verticalBounds,
 
 	adjList_ = graph_.GetAdjList();
 	paths_ = graph_.GetAllPaths(0);
+
+	Snake snake(blocks_, xpsHelper_, paths_);
+	snakePaths_ = snake.GetSnakePaths();
+}
+
+void Board::WritePaths() {
+	system("mkdir paths");
+
+	for (int i = 0; i < snakePaths_.size(); ++i) {
+		std::ofstream out(std::string() + "paths\\path" + std::to_string(i) + ".txt", std::ios::out);
+
+		for (int j = 0; j < snakePaths_[i].size(); ++j) {
+			out << xpsHelper_.GetOldCoords(snakePaths_[i][j]).first  << " " 
+				<< xpsHelper_.GetOldCoords(snakePaths_[i][j]).second << " " 
+				<< j / K_ << "\n";  
+		}
+
+		out.close();
+	}
 }
 
 void Board::CreateBlocks() {
@@ -42,4 +68,8 @@ const std::vector<std::vector<int>>& Board::GetAdjList() const {
 
 const std::vector<std::vector<int>>& Board::GetPaths() const {
 	return paths_;
+}
+
+const std::vector<std::vector<int>>& Board::GetSnakePaths() const {
+	return snakePaths_;
 }

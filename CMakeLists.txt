@@ -29,6 +29,10 @@ add_subdirectory(Block)
 target_link_libraries(LidaPath PUBLIC Block)
 target_include_directories(LidaPath PUBLIC Block)
 
+add_subdirectory(Snake)
+target_link_libraries(LidaPath PUBLIC Snake)
+target_include_directories(LidaPath PUBLIC Snake)
+
 add_subdirectory(BlockGraph)
 target_link_libraries(LidaPath PUBLIC BlockGraph)
 target_include_directories(LidaPath PUBLIC BlockGraph)

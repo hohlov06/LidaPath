@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 	std::cout << std::endl;
 	std::cout << std::endl;
 
-	Board board(gorizontalBounds, verticalBounds, xpsHelper);
+	Board board(gorizontalBounds, verticalBounds, xpsHelper, K);
 
 	auto blocks = board.GetBlocks();
 	for (int i = 0; i < blocks.size(); ++i) {
@@ -87,6 +87,12 @@ int main(int argc, char* argv[]) {
 			std::cout << paths[i][j] << " ";
 		std::cout << std::endl;
 	}
+
+	std::cout << std::endl;
+
+	std::cout << "Snake paths count: " << board.GetSnakePaths().size() << std::endl;
+
+	board.WritePaths();
 
 	return 0;
 }
