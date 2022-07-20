@@ -10,7 +10,7 @@ public:
 	Board(std::vector<int> gorizontalBounds, std::vector<int> verticalBounds,
 		  const XPSHelper& xpsHelper, const int K);
 
-	void WritePaths();
+	void WritePaths(int count);
 
 	const std::vector<Block>& GetBlocks() const;
 	const std::vector<std::vector<int>>& GetAdjList() const;

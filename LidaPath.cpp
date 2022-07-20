@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "Snake paths count: " << board.GetSnakePaths().size() << std::endl;
 
-	board.WritePaths();
+	board.WritePaths(20);
 
 	return 0;
 }

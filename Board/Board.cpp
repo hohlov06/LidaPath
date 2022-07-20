@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 Board::Board(std::vector<int> gorizontalBounds, std::vector<int> verticalBounds,
 			 const XPSHelper& xpsHelper, const int K) :
@@ -24,9 +25,46 @@ Board::Board(std::vector<int> gorizontalBounds, std::vector<int> verticalBounds,
 	snakePaths_ = snake.GetSnakePaths();
 }
 
-void Board::WritePaths() {
+void Board::WritePaths(int count) {
 	system("mkdir paths");
 
+
+	std::vector<std::pair<int, std::vector<int>*>> simSumPaths;
+	for (int i = 0; i < snakePaths_.size(); ++i) {
+		int curSimSum = 0;
+
+		std::vector<RArea> days(snakePaths_[i].size() / K_ + 1);
+
+		for (int j = 0; j < snakePaths_[i].size(); ++j)
+			days[j / (K_ + (j < snakePaths_[i].size() % K_))] = Merge(days[j / (K_ + (j < snakePaths_[i].size() % K_))], xpsHelper_.GetWellCoat(snakePaths_[i][j]));
+		
+		for (int j = 1; j < days.size(); ++j)
+			curSimSum += IntersectionSize(days[j-1], days[j]);
+
+		simSumPaths.push_back({curSimSum, &snakePaths_[i]});
+
+		std::cout << i << std::endl;
+	}
+
+	std::cout << "SimSumPaths OK" << std::endl;
+
+	std::sort(simSumPaths.begin(), simSumPaths.end(), [](std::pair<int, std::vector<int>*> lhs, std::pair<int, std::vector<int>*> rhs) {
+		return lhs.first < rhs.first;
+	});
+
+	std::cout << "Sort OK" << std::endl;
+
+	for (int i = 0; i < count; ++i) {
+		std::ofstream out(std::string() + "paths\\path" + std::to_string(i) + ".txt", std::ios::out);
+
+		for (int j = 0; j < simSumPaths[i].second->size(); ++j)
+			out << xpsHelper_.GetOldCoords((*simSumPaths[i].second)[j]).first << " "
+				<< xpsHelper_.GetOldCoords((*simSumPaths[i].second)[j]).second << " "
+				<< j / (K_ + (j < snakePaths_[i].size() % K_)) << "\n";
+
+		out.close();
+	}
+/*
 	for (int i = 0; i < snakePaths_.size(); ++i) {
 		std::ofstream out(std::string() + "paths\\path" + std::to_string(i) + ".txt", std::ios::out);
 
@@ -38,6 +76,7 @@ void Board::WritePaths() {
 
 		out.close();
 	}
+*/
 }
 
 void Board::CreateBlocks() {

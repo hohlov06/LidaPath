@@ -42,57 +42,6 @@ std::vector<std::vector<int>> Snake::GetSnakePaths() {
 
 int Snake::SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, int lastWellNum) {
 	auto geom = block.GetGeometry();
-	int startWellNum = -1;
-
-	if (lastWellNum == -1) {
-		for (int i = 0; i < geom.size(); ++i) {
-			if (startWellNum != -1)
-				break;
-
-			for (int j = 0; j < geom[i].size(); ++j)
-				if (geom[i][j] != -1) {
-					startWellNum = geom[i][j];
-					break;
-				}
-		}
-	} else {
-		for (int i = 0; i < geom.size(); ++i)
-			for (int j = 0; j < geom[i].size(); ++j) {
-				if (geom[i][j] == -1)
-					continue;
-
-				if (xpsHelper_.IsNeighbours(geom[i][j], lastWellNum))
-					startWellNum = geom[i][j];
-			}
-
-		if (startWellNum == -1) {
-			for (int i = 0; i < geom.size(); ++i)
-				for (int j = 0; j < geom[i].size(); ++j) {
-					if (geom[i][j] == -1)
-						continue;
-
-					if (xpsHelper_.GetWellCoords(geom[i][j]).first == xpsHelper_.GetWellCoords(lastWellNum).first || 
-						xpsHelper_.GetWellCoords(geom[i][j]).second == xpsHelper_.GetWellCoords(lastWellNum).second)
-					{
-						startWellNum = geom[i][j];
-					}
-				}
-		}
-	}
-
-	if (startWellNum == -1)
-		return -1;
-
-	int x = -1,
-		y = -1;
-
-	for (int i = 0; i < geom.size(); ++i)
-		for (int j = 0; j < geom[i].size(); ++j)
-			if (geom[i][j] == startWellNum) {
-				x = j;
-				y = i;
-			}
-
 	std::vector<std::pair<int, int>> verticalDirs   = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 	std::vector<std::pair<int, int>> gorizontalDirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; 
 
@@ -104,44 +53,79 @@ int Snake::SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType sn
 		dirs = gorizontalDirs;
 	}
 
-	auto canGo = [&](std::pair<int, int> well, std::pair<int, int> d) {
-		if (well.first + d.first >= geom.size() || well.first + d.first < 0)
+	std::vector<std::vector<bool>> used(geom.size(), std::vector<bool>(geom.front().size(), false));
+
+	auto canGo = [&](std::pair<int, int> coord, std::pair<int, int> d) {
+		if (coord.first + d.first < 0 || coord.first + d.first >= geom.size())
 			return false;
 
-		if (well.second + d.second >= geom[0].size() || well.second + d.second < 0)
+		if (coord.second + d.second < 0 || coord.second + d.second >= geom.front().size())
 			return false;
 
-		if (geom[well.first + d.first][well.second + d.second] == -1)
-			return false;
-
-		return true;
+		return (bool)(!used[coord.first + d.first][coord.second + d.second]);
 	};
 
-	std::set<int> snaked;
+	std::vector<std::pair<int, int>> startWells = {{0, 0},
+												   {geom.size()-1, 0},
+												   {0, geom.front().size()-1},
+												   {geom.size()-1, geom.front().size()-1}};
 
-	int last = startWellNum;
-	do {
-		res.push_back(last);
-		snaked.insert(last);
+	std::vector<std::vector<int>> paths;
 
-		bool isNext = false;
-		for (auto dir : dirs) {
-			if (canGo(std::make_pair(y, x), dir) && 
-				!snaked.count(geom[y + dir.first][x + dir.second]))
-			{
-				isNext = true;
-				y += dir.first;
-				x += dir.second;
-				break;
+	for (auto startWell : startWells) {
+		for (int i = 0; i < used.size(); ++i)
+			used[i].assign(used[i].size(), false);
+
+		int y = startWell.first,
+			x = startWell.second;
+
+		std::vector<int> curPath;
+		while (true) {
+			if (geom[y][x] != -1)
+				curPath.push_back(geom[y][x]);
+			used[y][x] = true;
+
+			bool isNext = false;
+			for (auto dir : dirs) {
+				if (canGo({y, x}, dir)) {
+					y += dir.first,
+					x += dir.second;
+					isNext = true;
+
+					break;
+				}
 			}
+
+			if (!isNext)
+				break;
 		}
 
-		if (isNext)
-			last = geom[y][x];
-		else
-			break;
+		paths.push_back(curPath);		
+	}
 
-	} while (true);
+	std::vector<int> selectPath;
+	if (lastWellNum == -1)
+		selectPath = paths.front();
+	else {
+		int curSimSum = -1;
+
+		for (int i = 0; i < paths.size(); ++i) {
+			if (paths[i].size() > 0 && 
+				IntersectionSize(xpsHelper_.GetWellCoat(paths[i].front()), xpsHelper_.GetWellCoat(lastWellNum)) > curSimSum)
+			{
+				curSimSum = IntersectionSize(xpsHelper_.GetWellCoat(paths[i].front()), xpsHelper_.GetWellCoat(lastWellNum));
+				selectPath = paths[i];
+			}
+		}
+	}
+
+	int last = lastWellNum;
+	if (selectPath.size() > 0) {
+		last = selectPath.back();
+
+		for (auto well : selectPath)
+			res.push_back(well);
+	}
 
 	return last;
 }
