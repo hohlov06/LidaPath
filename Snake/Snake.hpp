@@ -10,6 +10,14 @@ enum SnakeType {
 	GORIZONTAL
 };
 
+enum Angle {
+	LEFT_UP,
+	RIGHT_UP,
+
+	LEFT_DOWN,
+	RIGHT_DOWN
+};
+
 class Snake {
 public:
 	Snake(const std::vector<Block>& blocks, const XPSHelper& xpsHelper, const std::vector<std::vector<int>>& paths);
@@ -17,8 +25,8 @@ public:
 	std::vector<std::vector<int>> GetSnakePaths();
 
 private:
-	int SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType type, int lastWellNum = -1);
-
+	Angle SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, 
+						Angle start);
 	std::vector<std::vector<SnakeType>> snakeVariations_;
 
 	const std::vector<Block>& blocks_;

@@ -29,9 +29,42 @@ std::vector<std::vector<int>> Snake::GetSnakePaths() {
 		for (int j = 0; j < snakeVariations_.size(); ++j) {
 			std::vector<int> res;
 
-			int lastWellNum = -1;
-			for (int k = 0; k < blocks_.size(); ++k)
-				lastWellNum = SnakeRunBlock(res, blocks_[paths_[i][k]], snakeVariations_[j][k], lastWellNum);
+			Angle curAngle = Angle::LEFT_UP;
+
+			for (int k = 0; k < blocks_.size(); ++k) {
+				Angle after = SnakeRunBlock(res, blocks_[paths_[i][k]], snakeVariations_[j][k], curAngle);
+
+				if (k + 1 < blocks_.size()) {
+					int curBlockNum   = paths_[i][k];
+					int nextBlockNum  = paths_[i][k + 1];
+
+					if (nextBlockNum == curBlockNum + 1) {
+
+						if (after == Angle::LEFT_UP || after == Angle::RIGHT_UP)
+							curAngle = Angle::LEFT_UP;
+						else
+							curAngle = Angle::LEFT_DOWN;
+
+					} else if (nextBlockNum == curBlockNum - 1) {
+
+						if (after == Angle::LEFT_UP || after == Angle::RIGHT_UP)
+							curAngle = Angle::RIGHT_UP;
+						else
+							curAngle = Angle::RIGHT_DOWN;
+
+					} else if (nextBlockNum > curBlockNum) {
+						if (after == Angle::LEFT_UP || after == Angle::LEFT_DOWN)
+							curAngle = Angle::LEFT_UP;
+						else
+							curAngle = Angle::RIGHT_UP;
+					} else if (nextBlockNum < curBlockNum) {
+						if (after == Angle::LEFT_UP || after == Angle::LEFT_DOWN)
+							curAngle = Angle::LEFT_DOWN;
+						else
+							curAngle = Angle::RIGHT_DOWN;
+					}
+				}
+			}
 
 			ret.push_back(res);
 		}
@@ -40,7 +73,9 @@ std::vector<std::vector<int>> Snake::GetSnakePaths() {
 	return ret;
 }
 
-int Snake::SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, int lastWellNum) {
+Angle Snake::SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, 
+						   Angle start)
+{
 	auto geom = block.GetGeometry();
 	std::vector<std::pair<int, int>> verticalDirs   = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 	std::vector<std::pair<int, int>> gorizontalDirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; 
@@ -65,67 +100,57 @@ int Snake::SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType sn
 		return (bool)(!used[coord.first + d.first][coord.second + d.second]);
 	};
 
-	std::vector<std::pair<int, int>> startWells = {{0, 0},
-												   {geom.size()-1, 0},
-												   {0, geom.front().size()-1},
-												   {geom.size()-1, geom.front().size()-1}};
+	int x = 0,
+		y = 0;
 
-	std::vector<std::vector<int>> paths;
+	switch(start) {
+		case Angle::LEFT_UP:
+			x = 0;
+			y = 0;
+			break;
 
-	for (auto startWell : startWells) {
-		for (int i = 0; i < used.size(); ++i)
-			used[i].assign(used[i].size(), false);
+		case Angle::LEFT_DOWN:
+			y = geom.size() - 1;
+			x = 0;
+			break;
 
-		int y = startWell.first,
-			x = startWell.second;
+		case Angle::RIGHT_UP:
+			x = geom.front().size() - 1;
+			y = 0;
+			break;
 
-		std::vector<int> curPath;
-		while (true) {
-			if (geom[y][x] != -1)
-				curPath.push_back(geom[y][x]);
-			used[y][x] = true;
+		case Angle::RIGHT_DOWN:
+			x = geom.front().size() - 1;
+			y = geom.size() - 1;
+			break;
+	}
 
-			bool isNext = false;
-			for (auto dir : dirs) {
-				if (canGo({y, x}, dir)) {
-					y += dir.first,
-					x += dir.second;
-					isNext = true;
+	while (true) {
+		if (geom[y][x] != -1)
+			res.push_back(geom[y][x]);
+		used[y][x] = true;
 
-					break;
-				}
-			}
+		bool isNext = false;
+		for (auto dir : dirs) {
+			if (canGo({y, x}, dir)) {
+				y += dir.first,
+				x += dir.second;
+				isNext = true;
 
-			if (!isNext)
 				break;
-		}
-
-		paths.push_back(curPath);		
-	}
-
-	std::vector<int> selectPath;
-	if (lastWellNum == -1)
-		selectPath = paths.front();
-	else {
-		int curSimSum = -1;
-
-		for (int i = 0; i < paths.size(); ++i) {
-			if (paths[i].size() > 0 && 
-				IntersectionSize(xpsHelper_.GetWellCoat(paths[i].front()), xpsHelper_.GetWellCoat(lastWellNum)) > curSimSum)
-			{
-				curSimSum = IntersectionSize(xpsHelper_.GetWellCoat(paths[i].front()), xpsHelper_.GetWellCoat(lastWellNum));
-				selectPath = paths[i];
 			}
 		}
+
+		if (!isNext)
+			break;		
 	}
 
-	int last = lastWellNum;
-	if (selectPath.size() > 0) {
-		last = selectPath.back();
+	if (x == 0 && y == 0)
+		return Angle::LEFT_UP;
+	else if (x == 0 && y == geom.size()-1)
+		return Angle::LEFT_DOWN;
+	else if (x == geom.front().size()-1 && y == 0)
+		return Angle::RIGHT_UP;
 
-		for (auto well : selectPath)
-			res.push_back(well);
-	}
-
-	return last;
+	return Angle::RIGHT_DOWN;
 }
