@@ -7,25 +7,28 @@
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 
-namespace bgm = boost::geometry::model;
 
-class RArea {
-public:
-	RArea() {}
-	RArea(const std::vector<std::string>& data);
-	RArea(const bgm::multi_polygon<bgm::polygon<bgm::d2::point_xy<int>>>& storage);
+namespace LidaPath {
+    namespace bgm = boost::geometry::model;
 
-	RArea(const std::vector<std::pair<int, int>>& data, const std::vector<int>& lines);
-	std::vector<std::pair<int, int>> GetVertexPath();
-	void Compress();
+    class RArea {
+    public:
+        RArea() {}
+        RArea(const std::vector<std::string>& data);
+        RArea(const bgm::multi_polygon<bgm::polygon<bgm::d2::point_xy<int>>>& storage);
 
-	int Square() const; 
-	const bgm::multi_polygon<bgm::polygon<bgm::d2::point_xy<int>>>& GetStorage() const;
+        RArea(const std::vector<std::pair<int, int>>& data, const std::vector<int>& lines);
+        std::vector<std::pair<int, int>> GetVertexPath();
+        void Compress();
 
-	friend RArea Intersection(RArea r1, RArea r2);
-	friend RArea Merge(RArea r1, RArea r2);
-	friend int IntersectionSize(RArea r1, RArea r2);
+        int Square() const; 
+        const bgm::multi_polygon<bgm::polygon<bgm::d2::point_xy<int>>>& GetStorage() const;
 
-private:
-	bgm::multi_polygon<bgm::polygon<bgm::d2::point_xy<int>>> storage_;
-};
+        friend RArea Intersection(RArea r1, RArea r2);
+        friend RArea Merge(RArea r1, RArea r2);
+        friend int IntersectionSize(RArea r1, RArea r2);
+
+    private:
+        bgm::multi_polygon<bgm::polygon<bgm::d2::point_xy<int>>> storage_;
+    };
+}

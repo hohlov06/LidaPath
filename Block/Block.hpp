@@ -4,14 +4,16 @@
 
 #include <vector>
 
-class Block {
-public:
-	Block(std::vector<int> wellNums,
-		  const XPSHelper& xpsHelper_);
+namespace LidaPath {
+    class Block {
+    public:
+        Block(std::vector<int> wellNums,
+              const XPSHelper& xpsHelper_);
 
-	Block() = default;
+        Block() = default;
 
-	const std::vector<std::vector<int>>& GetGeometry() const;
-private:
-	std::vector<std::vector<int>> blockGeometry_;
-};
+        const std::vector<std::vector<int>>& GetGeometry() const;
+    private:
+        std::vector<std::vector<int>> blockGeometry_;
+    };
+}

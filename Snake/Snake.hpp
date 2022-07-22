@@ -5,32 +5,34 @@
 
 #include <vector>
 
-enum SnakeType {
-	VERTICAL,
-	GORIZONTAL
-};
+namespace LidaPath {
+    enum SnakeType {
+        VERTICAL,
+        GORIZONTAL
+    };
 
-enum Angle {
-	LEFT_UP,
-	RIGHT_UP,
+    enum Angle {
+        LEFT_UP,
+        RIGHT_UP,
 
-	LEFT_DOWN,
-	RIGHT_DOWN
-};
+        LEFT_DOWN,
+        RIGHT_DOWN
+    };
 
-class Snake {
-public:
-	Snake(const std::vector<Block>& blocks, const XPSHelper& xpsHelper, const std::vector<std::vector<int>>& paths);
+    class Snake {
+    public:
+        Snake(const std::vector<Block>& blocks, const XPSHelper& xpsHelper, const std::vector<std::vector<int>>& paths);
 
-	std::vector<std::vector<int>> GetSnakePaths();
+        std::vector<std::vector<int>> GetSnakePaths();
 
-private:
-	Angle SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, 
-						Angle start);
+    private:
+        Angle SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, 
+                            Angle start);
 
-	std::vector<std::vector<SnakeType>> snakeVariations_;
+        std::vector<std::vector<SnakeType>> snakeVariations_;
 
-	const std::vector<Block>& blocks_;
-	const XPSHelper xpsHelper_;
-	const std::vector<std::vector<int>>& paths_;
-};
+        const std::vector<Block>& blocks_;
+        const XPSHelper xpsHelper_;
+        const std::vector<std::vector<int>>& paths_;
+    };
+}
