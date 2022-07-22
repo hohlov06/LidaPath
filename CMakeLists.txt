@@ -41,6 +41,10 @@ add_subdirectory(Board)
 target_link_libraries(LidaPath PUBLIC Board)
 target_include_directories(LidaPath PUBLIC Board)
 
+add_subdirectory(PathHelper)
+target_link_libraries(LidaPath PUBLIC PathHelper)
+target_include_directories(LidaPath PUBLIC PathHelper)
+
 add_custom_target(XPSTest
 	${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/XPSTest ${CMAKE_CURRENT_BINARY_DIR}/XPSTest 
 )

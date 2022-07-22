@@ -27,6 +27,7 @@ public:
 private:
 	Angle SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, 
 						Angle start);
+
 	std::vector<std::vector<SnakeType>> snakeVariations_;
 
 	const std::vector<Block>& blocks_;

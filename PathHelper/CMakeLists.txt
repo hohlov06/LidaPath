@@ -1,0 +1,3 @@
+add_library(PathHelper PathHelper.cpp)
+target_link_libraries(PathHelper PUBLIC XPSHelper)
+target_include_directories(PathHelper PUBLIC XPSHelper)

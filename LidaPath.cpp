@@ -1,10 +1,13 @@
 #include "XPSHelper/XPSHelper.hpp"
 #include "Board/Board.hpp"
+#include "PathHelper/PathHelper.hpp"
 
 #include <iostream>
 
 int main(int argc, char* argv[]) {
 	XPSHelper xpsHelper(argv[1]);
+
+	PathHelper pathHelper(xpsHelper);
 
 	const int K = std::stoi(argv[2]);
 	int verticalBoundsCount = std::stoi(argv[3]);
@@ -52,6 +55,7 @@ int main(int argc, char* argv[]) {
 	std::cout << std::endl;
 
 	Board board(gorizontalBounds, verticalBounds, xpsHelper, K);
+	pathHelper.AddPaths(board.GetSnakePaths());
 
 	auto blocks = board.GetBlocks();
 	for (int i = 0; i < blocks.size(); ++i) {
@@ -92,7 +96,8 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "Snake paths count: " << board.GetSnakePaths().size() << std::endl;
 
-	board.WritePaths(20);
+	auto resPaths = pathHelper.CreateXPSPaths();
+	std::cout << "Results paths count: " << resPaths.size() << std::endl;
 
 	return 0;
 }
