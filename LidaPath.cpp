@@ -10,91 +10,42 @@ int main(int argc, char* argv[]) {
 	PathHelper pathHelper(xpsHelper);
 
 	const int K = std::stoi(argv[2]);
-	int verticalBoundsCount = std::stoi(argv[3]);
-	int gorizontalBoundsCount = std::stoi(argv[4]);
+	int verticalBoundsCountMax = std::stoi(argv[3]);
+	int gorizontalBoundsCountMax = std::stoi(argv[4]);
 
-	std::vector<int> verticalBounds,
-					 gorizontalBounds;
+	for (int verticalBoundsCount = 0; verticalBoundsCount <= verticalBoundsCountMax; ++verticalBoundsCount) {
+		for (int gorizontalBoundsCount = 0; gorizontalBoundsCount <= gorizontalBoundsCountMax; ++gorizontalBoundsCount) {
+			std::vector<int> verticalBounds,
+							 gorizontalBounds;
 
-	int xpsWidth  = xpsHelper.GetXPSWidth(),
-		xpsHeight = xpsHelper.GetXPSHeight();
+			int xpsWidth  = xpsHelper.GetXPSWidth(),
+				xpsHeight = xpsHelper.GetXPSHeight();
 
-	std::cout << xpsWidth << " " << xpsHeight << std::endl;
+			int dBlockVertical   = xpsHeight / (gorizontalBoundsCount + 1);
+			int dBlockGorizontal = xpsWidth  / (verticalBoundsCount   + 1);
 
-	int dBlockVertical   = xpsHeight / (gorizontalBoundsCount + 1);
-	int dBlockGorizontal = xpsWidth  / (verticalBoundsCount   + 1);
+			int curBoundVertical = dBlockGorizontal;
+			do {
+				verticalBounds.push_back(curBoundVertical);
+				curBoundVertical += dBlockGorizontal;
+			} while (curBoundVertical <= xpsWidth);
+			verticalBounds.pop_back();
+			verticalBounds.push_back(xpsWidth);
 
-	int curBoundVertical = dBlockGorizontal;
-	do {
-		verticalBounds.push_back(curBoundVertical);
-		curBoundVertical += dBlockGorizontal;
-	} while (curBoundVertical <= xpsWidth);
-	verticalBounds.pop_back();
-	verticalBounds.push_back(xpsWidth);
+			int curBoundGorizontal = dBlockVertical;
+			do {
+				gorizontalBounds.push_back(curBoundGorizontal);
+				curBoundGorizontal += dBlockVertical;
+			} while (curBoundGorizontal <= xpsHeight);
+			gorizontalBounds.pop_back();
+			gorizontalBounds.push_back(xpsHeight);
 
-	int curBoundGorizontal = dBlockVertical;
-	do {
-		gorizontalBounds.push_back(curBoundGorizontal);
-		curBoundGorizontal += dBlockVertical;
-	} while (curBoundGorizontal <= xpsHeight);
-	gorizontalBounds.pop_back();
-	gorizontalBounds.push_back(xpsHeight);
+			Board board(gorizontalBounds, verticalBounds, xpsHelper, K);
+			pathHelper.AddPaths(board.GetSnakePaths());
 
-	std::cout << "gorizontalBounds" << std::endl;
-	for (int i = 0; i < gorizontalBounds.size(); ++i)
-		std::cout << gorizontalBounds[i] << " ";
-
-	std::cout << std::endl;
-	std::cout << std::endl;
-
-	std::cout << "verticalBounds" << std::endl;
-	for (int i = 0; i < verticalBounds.size(); ++i)
-		std::cout << verticalBounds[i] << " ";
-
-	std::cout << std::endl;
-	std::cout << std::endl;
-
-	Board board(gorizontalBounds, verticalBounds, xpsHelper, K);
-	pathHelper.AddPaths(board.GetSnakePaths());
-
-	auto blocks = board.GetBlocks();
-	for (int i = 0; i < blocks.size(); ++i) {
-		auto geom = blocks[i].GetGeometry();
-
-		for (int j = 0; j < geom.size(); ++j) {
-			for (int k = 0; k < geom[j].size(); ++k)
-				std::cout << geom[j][k] << " ";
-			std::cout << std::endl;
+			std::cout << verticalBoundsCount << " " << gorizontalBoundsCount << " OK" << std::endl;
 		}
-
-		std::cout << std::endl;
-		std::cout << std::endl;
 	}
-
-	auto adjList = board.GetAdjList();
-
-	for (int i = 0; i < adjList.size(); ++i) {
-		std::cout << i << ": ";
-		for (int j = 0; j < adjList[i].size(); ++j)
-			std::cout << adjList[i][j] << " ";
-		std::cout << std::endl;
-	}
-
-	std::cout << std::endl;
-
-	auto paths = board.GetPaths();
-
-	std::cout << "Paths count: " << paths.size() << std::endl;
-
-	for (int i = 0; i < paths.size(); ++i) {
-		for (int j = 0; j < paths[i].size(); ++j)
-			std::cout << paths[i][j] << " ";
-		std::cout << std::endl;
-	}
-
-	std::cout << std::endl;
-
-	std::cout << "Snake paths count: " << board.GetSnakePaths().size() << std::endl;
 
 	auto resPaths = pathHelper.CreateXPSPaths();
 	std::cout << "Results paths count: " << resPaths.size() << std::endl;
