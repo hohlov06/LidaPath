@@ -5,7 +5,7 @@ project(LidaPath)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3")
 
-add_library(LidaPath LidaPath.hpp)
+add_library(LidaPath LidaPath.cpp)
 
 cmake_policy(SET CMP0074 NEW)
 find_package(Boost)
