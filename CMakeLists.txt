@@ -5,7 +5,7 @@ project(LidaPath)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3")
 
-add_executable(LidaPath LidaPath.cpp)
+add_library(LidaPath LidaPath.hpp)
 
 cmake_policy(SET CMP0074 NEW)
 find_package(Boost)
@@ -44,7 +44,3 @@ target_include_directories(LidaPath PUBLIC Board)
 add_subdirectory(PathHelper)
 target_link_libraries(LidaPath PUBLIC PathHelper)
 target_include_directories(LidaPath PUBLIC PathHelper)
-
-add_custom_target(XPSTest
-	${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/XPSTest ${CMAKE_CURRENT_BINARY_DIR}/XPSTest 
-)

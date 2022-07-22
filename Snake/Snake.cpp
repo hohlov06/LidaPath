@@ -19,9 +19,6 @@ Snake::Snake(const std::vector<Block>& blocks, const XPSHelper& xpsHelper, const
 
         snakeVariations_.push_back(snakeVariant);
     }
-
-    std::cout << "Snake Variations Size: " << snakeVariations_.size() << std::endl;
-    std::cout << std::endl;
 }
 
 std::vector<std::vector<int>> Snake::GetSnakePaths() {

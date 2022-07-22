@@ -53,8 +53,6 @@ void DeleteUnusedXPSLines(std::vector<std::string>& xps_lines) {
 }
 
 XPSHelper::XPSHelper(const char* XPSFilePath) {
-    std::cout << "Start XPSHelper for " << XPSFilePath << std::endl;
-
     std::ifstream XPSIn(XPSFilePath, std::ios::in);
     if (not XPSIn.is_open())
         throw std::runtime_error("Can not open XPSFilePath");
@@ -68,8 +66,6 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
 
     DeleteUnusedXPSLines(xpsLines);
 
-    std::cout << "Deleting unused XPS Lines OK" << std::endl;
-
     int SubX = GetVertexX(xpsLines[0]),
         SubY = GetVertexY(xpsLines[0]);
 
@@ -82,8 +78,6 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
             oldGeometry_.push_back({X, Y});
         }
     }
-
-    std::cout << "Old Geometry OK" << std::endl;
 
     std::vector<std::pair<int, int>> linesSegments;
     int curVertexStart = 0,
@@ -108,8 +102,6 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
         storage_.push_back(RArea(segmentLines));
     }
 
-    std::cout << "Storage OK" << std::endl;
-
     int gcd_x = std::__gcd(geometry_[0].first, geometry_[1].first);
     for (int i = 2; i < geometry_.size(); ++i)
         gcd_x = std::__gcd(gcd_x, geometry_[i].first);
@@ -126,9 +118,6 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
 
     for (int i = 0; i < geometry_.size(); ++i)
         geomToNum_[geometry_[i]] = i;
-
-    std::cout << "Geometry OK" << std::endl;
-    std::cout << "XPSHelper constructor OK" << std::endl;
 }
 
 int XPSHelper::GetWellCount() const {
