@@ -1,4 +1,6 @@
 #include "PathHelper.hpp"
+#include <fstream>
+
 
 using namespace LidaPath;
 
@@ -24,4 +26,20 @@ std::vector<std::vector<std::pair<int, int>>> PathHelper::CreateXPSPaths() {
     }
 
     return ret;
+}
+
+void PathHelper::WritePaths(int K) {
+    system("mkdir paths");
+
+    auto paths = CreateXPSPaths();
+
+    for (int i = 0; i < paths.size(); ++i) {
+        std::ofstream out(std::string() + "paths\\path" + std::to_string(i) + ".txt", std::ios::out);
+
+        for (int j = 0; j < paths[i].size(); ++j) {
+            out << paths[i][j].first << " " << paths[i][j].second << " " << j / (K + (j < paths[i].size() % K)) << "\n";
+        }
+
+        out.close();
+    }
 }

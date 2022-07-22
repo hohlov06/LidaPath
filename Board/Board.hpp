@@ -2,6 +2,7 @@
 
 #include "../XPSHelper/XPSHelper.hpp"
 #include "../Block/Block.hpp"
+#include "../Snake/Snake.hpp"
 
 #include <vector>
 
@@ -17,6 +18,7 @@ namespace LidaPath {
         const std::vector<std::vector<int>>& GetAdjList() const;
         const std::vector<std::vector<int>>& GetPaths() const;
         const std::vector<std::vector<int>>& GetSnakePaths() const;
+        const std::vector<std::vector<SnakeType>>& GetSnakeVariations() const;
 
     private:
         void CreateBlocks();
@@ -33,5 +35,7 @@ namespace LidaPath {
         std::vector<std::vector<int>> paths_;
 
         std::vector<std::vector<int>> snakePaths_;
+
+        std::vector<std::vector<SnakeType>> snakeVariations_;
     };
 }

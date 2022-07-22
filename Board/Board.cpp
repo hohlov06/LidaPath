@@ -25,6 +25,8 @@ Board::Board(std::vector<int> gorizontalBounds, std::vector<int> verticalBounds,
 
     Snake snake(blocks_, xpsHelper_, paths_);
     snakePaths_ = snake.GetSnakePaths();
+
+    snakeVariations_ = snake.GetSnakeVariations();
 }
 
 void Board::WritePaths(int count) {
@@ -99,4 +101,8 @@ const std::vector<std::vector<int>>& Board::GetPaths() const {
 
 const std::vector<std::vector<int>>& Board::GetSnakePaths() const {
     return snakePaths_;
+}
+
+const std::vector<std::vector<SnakeType>>& Board::GetSnakeVariations() const {
+    return snakeVariations_;
 }

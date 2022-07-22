@@ -1,17 +1,19 @@
 #include "XPSHelper/XPSHelper.hpp"
 #include "Board/Board.hpp"
 #include "PathHelper/PathHelper.hpp"
+#include "TSVHelper/TSVHelper.hpp"
 
 #include <iostream>
 
 int main(int argc, char* argv[]) {
     LidaPath::XPSHelper xpsHelper(argv[1]);
-
     LidaPath::PathHelper pathHelper(xpsHelper);
 
     const int K = std::stoi(argv[2]);
     int verticalBoundsCountMax = std::stoi(argv[3]);
     int gorizontalBoundsCountMax = std::stoi(argv[4]);
+
+    LidaPath::TSVHelper tsvHelper(xpsHelper, K);
 
     for (int verticalBoundsCount = 0; verticalBoundsCount <= verticalBoundsCountMax; ++verticalBoundsCount) {
         for (int gorizontalBoundsCount = 0; gorizontalBoundsCount <= gorizontalBoundsCountMax; ++gorizontalBoundsCount) {
@@ -41,6 +43,7 @@ int main(int argc, char* argv[]) {
             gorizontalBounds.push_back(xpsHeight);
 
             LidaPath::Board board(gorizontalBounds, verticalBounds, xpsHelper, K);
+            tsvHelper.AddBoard(board, verticalBoundsCount, gorizontalBoundsCount);
             pathHelper.AddPaths(board.GetSnakePaths());
 
             std::cout << verticalBoundsCount << " " << gorizontalBoundsCount << " OK" << std::endl;
@@ -49,6 +52,12 @@ int main(int argc, char* argv[]) {
 
     auto resPaths = pathHelper.CreateXPSPaths();
     std::cout << "Results paths count: " << resPaths.size() << std::endl;
+
+    std::ofstream out("LidaPathResultTable.tsv", std::ios::out);
+    tsvHelper.WriteTSV(out);
+    out.close();
+
+    pathHelper.WritePaths(K);
 
     return 0;
 }

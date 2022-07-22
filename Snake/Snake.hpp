@@ -24,6 +24,7 @@ namespace LidaPath {
         Snake(const std::vector<Block>& blocks, const XPSHelper& xpsHelper, const std::vector<std::vector<int>>& paths);
 
         std::vector<std::vector<int>> GetSnakePaths();
+        const std::vector<std::vector<SnakeType>>& GetSnakeVariations() const;
 
     private:
         Angle SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType snakeType, 

@@ -9,6 +9,7 @@ namespace LidaPath {
 	public:
 		void AddPaths(const std::vector<std::vector<int>>& newPaths);
 		PathHelper(const XPSHelper& xpsHelper);
+		void WritePaths(int K);
 
 		std::vector<std::vector<std::pair<int, int>>> CreateXPSPaths();
 	private:

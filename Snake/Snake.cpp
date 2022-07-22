@@ -156,3 +156,7 @@ Angle Snake::SnakeRunBlock(std::vector<int>& res, const Block& block, SnakeType 
 
     return Angle::RIGHT_DOWN;
 }
+
+const std::vector<std::vector<SnakeType>>& Snake::GetSnakeVariations() const {
+    return snakeVariations_;
+}
