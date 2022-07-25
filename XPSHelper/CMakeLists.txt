@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
+project(XPSHelper)
+
 add_library(XPSHelper XPSHelper.cpp)
 target_link_libraries(XPSHelper PUBLIC RArea)
 target_include_directories(XPSHelper PUBLIC RArea)
