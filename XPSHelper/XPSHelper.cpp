@@ -61,8 +61,12 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
 
     std::vector<std::string> xpsLines;
     std::string line;
-    while(std::getline(XPSIn, line))
+    while (std::getline(XPSIn, line)) {
+        if (line.empty() || line[0] == 'H' || (line.size() > 1 && line[1] == 'H')) {
+            continue;
+        }
         xpsLines.push_back(line);
+    }
 
     XPSIn.close();
 
