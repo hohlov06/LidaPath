@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <iostream>
 
 using namespace LidaPath;
 

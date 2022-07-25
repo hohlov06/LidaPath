@@ -5,6 +5,8 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
+#include <iso646.h>
+#include <numeric>
 
 using namespace LidaPath;
 
@@ -102,16 +104,16 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
         storage_.push_back(RArea(segmentLines));
     }
 
-    int gcd_x = std::__gcd(geometry_[0].first, geometry_[1].first);
+    int gcd_x = std::gcd(geometry_[0].first, geometry_[1].first);
     for (int i = 2; i < geometry_.size(); ++i)
-        gcd_x = std::__gcd(gcd_x, geometry_[i].first);
+        gcd_x = std::gcd(gcd_x, geometry_[i].first);
     if (gcd_x > 0)
         for (int i = 0; i < geometry_.size(); ++i)
             geometry_[i].first /= gcd_x;
 
-    int gcd_y = std::__gcd(geometry_[0].second, geometry_[1].second);
+    int gcd_y = std::gcd(geometry_[0].second, geometry_[1].second);
     for (int i = 2; i < geometry_.size(); ++i)
-        gcd_y = std::__gcd(gcd_y, geometry_[i].second);
+        gcd_y = std::gcd(gcd_y, geometry_[i].second);
     if (gcd_y > 0)
         for (int i = 0; i < geometry_.size(); ++i)
             geometry_[i].second /= gcd_y;

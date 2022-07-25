@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <algorithm>
+#include <iso646.h>
 
 using namespace LidaPath;
 

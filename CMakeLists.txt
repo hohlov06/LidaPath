@@ -6,16 +6,21 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3")
 
 add_library(LidaPath LidaPath.cpp)
+target_include_directories(${PROJECT_NAME} PUBLIC ./)
+
+IF(MSVC)
+    ADD_DEFINITIONS("/EHsc")
+ENDIF(MSVC)
 
 cmake_policy(SET CMP0074 NEW)
 find_package(Boost)
 if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS}) 
+    target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIRS}) 
     link_directories(${Boost_LIBRARY_DIRS})
-    target_link_libraries(LidaPath ${Boost_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
 endif()
 
-add_dependencies(LidaPath XPSTest)
+#add_dependencies(LidaPath XPSTest)
 
 add_subdirectory(XPSHelper)
 target_link_libraries(LidaPath PUBLIC XPSHelper)
